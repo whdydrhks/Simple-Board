@@ -66,7 +66,7 @@ public class BoardService {
     @Transactional
     public List<BoardDTO> findAll() {
         List<BoardEntity> boardEntityList = boardRepository.findAll();
-        List<BoardDTO> boardDTOList = new ArrayList<>();
+        List<BoardDTO> boardDTOList = new ArrayList<>(); // Entity의 객체를 DTO로 넘겨줘야된다.
         for (BoardEntity boardEntity: boardEntityList) {
             boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
         }

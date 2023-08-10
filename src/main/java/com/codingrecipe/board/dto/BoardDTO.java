@@ -19,8 +19,8 @@ public class BoardDTO {
     private String boardTitle;
     private String boardContents;
     private int boardHits;
-    private LocalDateTime boardCreatedTime;
-    private LocalDateTime boardUpdatedTime;
+    private LocalDateTime boardCreatedTime; // 게시글 작성시간
+    private LocalDateTime boardUpdatedTime; // 게시글 수정시간
 
     private MultipartFile boardFile; // save.html -> Controller 파일 담는 용도
     private String originalFileName; // 원본 파일 이름

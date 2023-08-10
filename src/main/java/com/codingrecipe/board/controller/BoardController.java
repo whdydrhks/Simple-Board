@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
+@RequiredArgsConstructor // 생성자 주입방식으로 의존성을 주입받게 된다.
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
@@ -36,18 +36,18 @@ public class BoardController {
 
     @GetMapping("/")
     public String findAll(Model model) {
-        // DB에서 전체 게시글 데이터를 가져와서 list.html에 보여준다.
+        // DB에서 전체 게시글 데이터를 가져와서 list.html에 보여준다. => Model model 사용
         List<BoardDTO> boardDTOList = boardService.findAll();
         model.addAttribute("boardList", boardDTOList);
         return "list";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // 게시글 상세 조회
     public String findById(@PathVariable Long id, Model model,
                            @PageableDefault(page=1) Pageable pageable) {
         /*
             해당 게시글의 조회수를 하나 올리고
-            게시글 데이터를 가져와서 detail.html에 출력
+            게시글 데이터를 가져와서 detail.html에 출력 => Model model 사용
          */
         boardService.updateHits(id);
         BoardDTO boardDTO = boardService.findById(id);
