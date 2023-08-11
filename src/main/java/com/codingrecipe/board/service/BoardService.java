@@ -104,10 +104,14 @@ public class BoardService {
         int page = pageable.getPageNumber() - 1;
         int pageLimit = 3; // 한 페이지에 보여줄 글 갯수
         // 한페이지당 3개씩 글을 보여주고 정렬 기준은 id 기준으로 내림차순 정렬
-        // page 위치에 있는 값은 0부터 시작
+
         Page<BoardEntity> boardEntities =
                 boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        // page: 몇페이지, pageLimit: 한 페이지에 보여줄 글갯수,
+            // page 위치에 있는 값은 0부터 시작
+        // Sort.by(Sort.Direction.DESC, "id")): id는 단순히 쓴게 아니라, Entity에 작성한 이름 기준이다(Entity의 PK). DB 컬럼 기준이 아님.
 
+        // Page 인터페이스와 그 부모 Slice 인터페이스 에 있는 내용들
         System.out.println("boardEntities.getContent() = " + boardEntities.getContent()); // 요청 페이지에 해당하는 글
         System.out.println("boardEntities.getTotalElements() = " + boardEntities.getTotalElements()); // 전체 글갯수
         System.out.println("boardEntities.getNumber() = " + boardEntities.getNumber()); // DB로 요청한 페이지 번호
@@ -117,7 +121,7 @@ public class BoardService {
         System.out.println("boardEntities.isFirst() = " + boardEntities.isFirst()); // 첫 페이지 여부
         System.out.println("boardEntities.isLast() = " + boardEntities.isLast()); // 마지막 페이지 여부
 
-        // 목록: id, writer, title, hits, createdTime
+        // 가져갈 목록: id, writer, title, hits, createdTime : DTO 생성자를 추가로 만들어야 된다.
         Page<BoardDTO> boardDTOS = boardEntities.map(board -> new BoardDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle(), board.getBoardHits(), board.getCreatedTime()));
         return boardDTOS;
     }
