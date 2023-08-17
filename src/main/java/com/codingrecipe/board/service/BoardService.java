@@ -54,8 +54,11 @@ public class BoardService {
 //            String savePath = "/Users/사용자이름/springboot_img/" + storedFileName; // C:/springboot_img/9802398403948_내사진.jpg
             boardFile.transferTo(new File(savePath)); // 5.
             BoardEntity boardEntity = BoardEntity.toSaveFileEntity(boardDTO);
-            Long savedId = boardRepository.save(boardEntity).getId();
-            BoardEntity board = boardRepository.findById(savedId).get();
+            Long savedId = boardRepository.save(boardEntity).getId(); // 부모(board_file)의 id(PK)값이 필요해서.
+            // 자식인 BoardFileEntity에서 부모의 PK(id)를 저장하는게 아닌, 부모 Entity(BoardEntity)를 저장하므로.
+
+            BoardEntity board = boardRepository.findById(savedId).get(); // id를 통해 부모 Entity 가져오기.
+            // 위에서 선언한 boardEntity는 아직 DB에 저장하지 않아 id가 없다.
 
             BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
             boardFileRepository.save(boardFileEntity);
