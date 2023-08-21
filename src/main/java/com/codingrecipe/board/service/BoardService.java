@@ -47,12 +47,6 @@ public class BoardService {
                 6. board_table에 해당 데이터 save 처리
                 7. board_file_table에 해당 데이터 save 처리
              */
-            MultipartFile boardFile = boardDTO.getBoardFile(); // 1.
-            String originalFilename = boardFile.getOriginalFilename(); // 2.
-            String storedFileName = System.currentTimeMillis() + "_" + originalFilename; // 3.
-            String savePath = "C:/springboot_img/" + storedFileName; // 4. C:/springboot_img/9802398403948_내사진.jpg
-//            String savePath = "/Users/사용자이름/springboot_img/" + storedFileName; // C:/springboot_img/9802398403948_내사진.jpg
-            boardFile.transferTo(new File(savePath)); // 5.
             BoardEntity boardEntity = BoardEntity.toSaveFileEntity(boardDTO);
             Long savedId = boardRepository.save(boardEntity).getId(); // 부모(board_file)의 id(PK)값이 필요해서.
             // 자식인 BoardFileEntity에서 부모의 PK(id)를 저장하는게 아닌, 부모 Entity(BoardEntity)를 저장하므로.
@@ -60,10 +54,17 @@ public class BoardService {
             BoardEntity board = boardRepository.findById(savedId).get(); // id를 통해 부모 Entity 가져오기.
             // 위에서 선언한 boardEntity는 아직 DB에 저장하지 않아 id가 없다.
 
-            BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
-            boardFileRepository.save(boardFileEntity);
+            for(MultipartFile boardFile : boardDTO.getBoardFile()) {
+//                MultipartFile boardFile = boardDTO.getBoardFile(); // 1.
+                String originalFilename = boardFile.getOriginalFilename(); // 2.
+                String storedFileName = System.currentTimeMillis() + "_" + originalFilename; // 3.
+                String savePath = "C:/springboot_img/" + storedFileName; // 4. C:/springboot_img/9802398403948_내사진.jpg
+//            String savePath = "/Users/사용자이름/springboot_img/" + storedFileName; // C:/springboot_img/9802398403948_내사진.jpg
+                boardFile.transferTo(new File(savePath)); // 5.
+                BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
+                boardFileRepository.save(boardFileEntity);
+            }
         }
-
     }
 
     @Transactional
@@ -81,12 +82,12 @@ public class BoardService {
         boardRepository.updateHits(id);
     }
 
-    @Transactional
+    @Transactional // 부모 Entity에서 자식 Entity에 접근할 때 해당 메소드에서 @Transactional 어노테이션이 필요.
     public BoardDTO findById(Long id) {
         Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
         if (optionalBoardEntity.isPresent()) {
             BoardEntity boardEntity = optionalBoardEntity.get();
-            BoardDTO boardDTO = BoardDTO.toBoardDTO(boardEntity);
+            BoardDTO boardDTO = BoardDTO.toBoardDTO(boardEntity); // BoardEntity가 BoardFileEntity에 접근하고 있으므로.
             return boardDTO;
         } else {
             return null;
