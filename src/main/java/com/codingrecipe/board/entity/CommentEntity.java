@@ -29,9 +29,9 @@ public class CommentEntity extends BaseEntity {
 
     public static CommentEntity toSaveEntity(CommentDTO commentDTO, BoardEntity boardEntity) {
         CommentEntity commentEntity = new CommentEntity();
-        commentEntity.setCommentWriter(commentDTO.getCommentWriter());
-        commentEntity.setCommentContents(commentDTO.getCommentContents());
-        commentEntity.setBoardEntity(boardEntity);
+        commentEntity.setCommentWriter(commentDTO.getCommentWriter()); // 작성자
+        commentEntity.setCommentContents(commentDTO.getCommentContents()); // 내용
+        commentEntity.setBoardEntity(boardEntity); // 게시글 번호로 조회한 Entity 값
         return commentEntity;
     }
 }

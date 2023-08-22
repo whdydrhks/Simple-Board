@@ -31,8 +31,12 @@ public class CommentService {
     }
 
     public List<CommentDTO> findAll(Long boardId) {
+        // select * from comment_table where board_id=? order by id desc;
         BoardEntity boardEntity = boardRepository.findById(boardId).get();
         List<CommentEntity> commentEntityList = commentRepository.findAllByBoardEntityOrderByIdDesc(boardEntity);
+        // boardEntity를 매개변수로 하여, Entity리스트를 받고,
+        // Entity 리스트를 DTO 리스트로 바꾼다.
+
         /* EntityList -> DTOList */
         List<CommentDTO> commentDTOList = new ArrayList<>();
         for (CommentEntity commentEntity: commentEntityList) {

@@ -24,6 +24,7 @@ public class CommentDTO {
         commentDTO.setCommentContents(commentEntity.getCommentContents());
         commentDTO.setCommentCreatedTime(commentEntity.getCreatedTime());
         commentDTO.setBoardId(boardId);
+        // commentDTO.setBoardId(commentEntity.getBoardEntity().getId()); // Service 메서드에 @Transactional 을 붙여야 된다.
         return commentDTO;
     }
 }
